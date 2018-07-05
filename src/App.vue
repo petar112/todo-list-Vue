@@ -6,6 +6,8 @@
 
 <script>
 import toDoApp from './components/toDoApp.vue'
+import './directives/HighlightPriorityDirective.js'
+import './directives/FocusOnInput.js'
 
 export default {
   name: 'app',

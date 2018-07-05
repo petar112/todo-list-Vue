@@ -3,14 +3,14 @@
         <ul class="list-group">
             <li class="list-group-item">
                 <div class="input-group">
-                    <input type="text" id="input" v-model="newTask" class="form-control" placeholder="Task List Item" aria-describedby="basic-addon2" />
+                    <input type="text" id="input" v-model="newTask" @keyup.enter="addTask" v-focus class="form-control" placeholder="Task List Item" aria-describedby="basic-addon2" />
                     <div class="input-group-append">
                         <button @click="addTask" :title="title" class="btn btn-outline-secondary">Add Name</button>
                     </div>
                 </div>
             </li>
 
-            <Task v-for="task in tasks" :key="task.id" :task="task" @delete-task="deleteTask"></Task>
+            <Task v-for="task in tasks" :key="task.id" :task="task" @delete-task="deleteTask" v-priorityHighlight="{priority: task.priority}"></Task>
         </ul>
     </div>
 </template>
@@ -37,7 +37,7 @@
             addTask(){
                 if(this.newTask !== ""){
                     axios.post('http://localhost:8000/api/tasks/add', {
-                        'description': this.newTask, 'completed': false
+                        'description': this.newTask, 'completed': false, 'priority' : "high"
                     })
                     .then(res => {
                         this.tasks.push(res.data),
@@ -52,12 +52,15 @@
                 }
             },
             deleteTask(task){
-                axios.delete('http://localhost:8000/api/tasks/delete', {
-                    params : task
-                })
-                .then(() => {
-                    this.tasks.splice(this.tasks.indexOf(task), 1);
-                })
+                let res = confirm("Are you sure u want to delete " + task.description + " ?");
+                if (res) {
+                    axios.delete('http://localhost:8000/api/tasks/delete', {
+                        params : task
+                    })
+                    .then(() => {
+                        this.tasks.splice(this.tasks.indexOf(task), 1);
+                    })
+                }
             },
         }
     }
