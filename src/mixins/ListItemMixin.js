@@ -44,7 +44,7 @@ export default {
         },
         
         setTaskPrivate(task) {
-            if(task.public === false)
+            if(!task.public)
             task.public = true;
             else
             task.public = false;

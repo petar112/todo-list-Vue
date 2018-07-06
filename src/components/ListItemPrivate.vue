@@ -5,7 +5,7 @@
         <button style="float:right" @click="modifyingTask(task)">&#x270D;</button>
         <button style="float:right" @click="deleteTask">&#x2716;</button>
         <button style="float:right" @click="completeTask(task)">&#x2705;</button>
-        <button style="float:right" v-if='task.public == true' @click="setTaskPrivate(task)">&#x2606;</button>
+        <button style="float:right" v-if='task.public === true' @click="setTaskPrivate(task)">&#x2606;</button>
         <button style="float:right" v-else @click="setTaskPrivate(task)">&#x2605;</button>
         <div v-if="modifyingTasks === task.id" style="float: right">
             <input type="text" v-model="modifiedTaskDescription" @keyup.enter="modifyTaskDescription(task)" v-focus placeholder="Modify Task" aria-describedby="basic-addon2">

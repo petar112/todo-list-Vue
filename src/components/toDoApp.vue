@@ -24,6 +24,18 @@
             }
         },
 
+        watch: {
+            tasks: {
+                handler: function(oldVal, newVal) {
+                    // Showing same value since we are working with array, and all references showing on same array
+                    // Vue doesn't keep copy of premutated array
+                    console.log(newVal);
+                    console.log(oldVal);
+                },
+                deep: true
+            }
+        },
+
         created () {
             let url = 'http://localhost:8000/api/tasks';
             axios.get(url).then(
