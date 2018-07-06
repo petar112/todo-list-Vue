@@ -9,8 +9,10 @@
                     </div>
                 </div>
             </li>
-
-            <Task v-for="task in tasks" :key="task.id" :task="task" @delete-task="deleteTask" v-priorityHighlight="{priority: task.priority}"></Task>
+            <div v-for="task in tasks" :key="task.id">
+                <Task v-if="task.public"  :task="task" @delete-task="deleteTask" v-priorityHighlight="{task : task}"></Task>
+                <TaskPrivate v-else :task="task" @delete-task="deleteTask" v-priorityHighlight="{task : task}"></TaskPrivate>
+            </div>
         </ul>
     </div>
 </template>
@@ -18,26 +20,34 @@
 <script>
     import axios from 'axios'
     import Task from './ListItem.vue'
+    import TaskPrivate from './ListItemPrivate.vue'
+    import mixin from './../mixins/ListItemMixin.js'
 
     export default {
         name: 'Task-List',
+
         props: {
             tasks: Array
         },
+
         data () {
             return {
                 newTask : '',
-                title: "Adding Task!"
+                title: "Adding Task!",
+                mixin
             }
         },
+
         components: {
-            Task
+            Task,
+            TaskPrivate
         },
+        
         methods: {
             addTask(){
                 if(this.newTask !== ""){
                     axios.post('http://localhost:8000/api/tasks/add', {
-                        'description': this.newTask, 'completed': false, 'priority' : "high"
+                        'description': this.newTask, 'completed': false, 'priority' : "high", 'public' : true
                     })
                     .then(res => {
                         this.tasks.push(res.data),
@@ -51,6 +61,7 @@
                     alert('You can\'t insert empty ')
                 }
             },
+
             deleteTask(task){
                 let res = confirm("Are you sure u want to delete " + task.description + " ?");
                 if (res) {

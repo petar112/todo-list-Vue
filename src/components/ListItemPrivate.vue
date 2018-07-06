@@ -7,9 +7,6 @@
         <button style="float:right" @click="completeTask(task)">&#x2705;</button>
         <button style="float:right" v-if='task.public == true' @click="setTaskPrivate(task)">&#x2606;</button>
         <button style="float:right" v-else @click="setTaskPrivate(task)">&#x2605;</button>
-        <select style="float:right; margin: 0px 25px" v-model="task.priority" @change="modifyTaskPriority(task)">
-            <option v-for="priority in Priority" :key="priority">{{ priority }}</option>
-        </select>
         <div v-if="modifyingTasks === task.id" style="float: right">
             <input type="text" v-model="modifiedTaskDescription" @keyup.enter="modifyTaskDescription(task)" v-focus placeholder="Modify Task" aria-describedby="basic-addon2">
             <button @click="modifyTaskDescription(task)">&#8594;</button>
@@ -18,41 +15,23 @@
 </template>
 
 <script>
-    import axios from 'axios'
     import mixin from './../mixins/ListItemMixin.js'
+    // import axios from 'axios'
 
     export default {
         name: 'Task',
 
         mixins: [mixin],
 
-        data () {
-            return {
-                modifiedTaskDescription: '',
-                modifyingTasks: '',
-                Priority: [
-                    "high",
-                    "medium",
-                    "low"
-                ],
-            }
-        },
-
         props: {
             task: Object,
         },
 
-        methods: {
-            modifyTaskPriority(task){
-                axios.put('http://localhost:8000/api/tasks/update', task)
-                .then(() => {
-                    this.modifyingTasks = null;
-                })
-                .catch(error => {
-                    if(error.res.status == 422)
-                    alert(error.res.data.message + '\nTask List Item can\'t be empty')
-                })
-            },
-        }
+        data () {
+            return {
+                modifiedTaskDescription: '',
+                modifyingTasks: '',
+            }
+        },
     }
 </script>

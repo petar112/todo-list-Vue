@@ -1,20 +1,23 @@
 import Vue from 'vue';
 
 Vue.directive('priorityHighlight', {
-    inserted: function(task, priority){ directiveHelper(task, priority)},
-    update: function(task, priority){ directiveHelper(task, priority)}
+    inserted: function(el, task){ directiveHelper(el, task)},
+    update: function(el, task){ directiveHelper(el, task)}
 })
 
 
-function directiveHelper(task, priority) {
-    priority = priority.value.priority;
-    if(priority === "high"){
-        task.style.backgroundColor = "red";
+function directiveHelper(el, task) {
+    let priority = task.value.task.priority;
+    let publicTask = task.value.task.public;
+    if(!publicTask){
+        el.style.backgroundColor = "#b2d8d8"
+    }else if(priority === "high"){
+        el.style.backgroundColor = "#98fb98";
     }else if(priority === "medium"){
-        task.style.backgroundColor = "yellow";
+        el.style.backgroundColor = "#b6fcb6";
     }else if(priority === "low"){
-        task.style.backgroundColor = "green";
+        el.style.backgroundColor = "#e0fde0";
     }else {
-        task.style.backgroundColor = "white";
+        el.style.backgroundColor = "white";
     }
 }
