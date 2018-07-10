@@ -18,18 +18,15 @@
 </template>
 
 <script>
-    import axios from 'axios'
     import Task from './ListItem.vue'
     import TaskPrivate from './ListItemPrivate.vue'
     import mixin from './../mixins/ListItemMixin.js'
 
     export default {
         name: 'Task-List',
-
         props: {
             tasks: Array
         },
-
         data () {
             return {
                 newTask : '',
@@ -37,40 +34,22 @@
                 mixin
             }
         },
-
         components: {
             Task,
             TaskPrivate
         },
-        
         methods: {
             addTask(){
-                if(this.newTask !== ""){
-                    axios.post('http://localhost:8000/api/tasks/add', {
-                        'description': this.newTask, 'completed': false, 'priority' : "high", 'public' : true
-                    })
-                    .then(res => {
-                        this.tasks.push(res.data),
-                        this.newTask = ''
-                    })
-                    .catch(error => {
-                        if(error.response.status == 422)
-                        alert(error.response.data.message + '\nTask List Item can\'t be empty')
-                    })    
+                if(this.newTask !== ""){  
+                    return this.$store.dispatch('addTask', {description: this.newTask})
                 }else {
                     alert('You can\'t insert empty ')
                 }
             },
-
             deleteTask(task){
                 let res = confirm("Are you sure u want to delete " + task.description + " ?");
                 if (res) {
-                    axios.delete('http://localhost:8000/api/tasks/delete', {
-                        params : task
-                    })
-                    .then(() => {
-                        this.tasks.splice(this.tasks.indexOf(task), 1);
-                    })
+                    return this.$store.dispatch('deleteTask', task)
                 }
             },
         }

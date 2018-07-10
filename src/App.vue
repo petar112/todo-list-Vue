@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <toDoApp></toDoApp>
-    </div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>

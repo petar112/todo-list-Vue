@@ -8,7 +8,6 @@
 <script>
     import Task from './ListItem.vue'
     import TaskList from './TaskList.vue'
-    import axios from 'axios'
 
     export default {
         name: 'toDoApp',
@@ -17,30 +16,26 @@
             Task,
             TaskList
         },
-
-        data () {
-            return {
-                tasks: []
+        computed: {
+            tasks () {
+                return this.$store.getters.getAllTasks
             }
         },
-
-        watch: {
-            tasks: {
-                handler: function(oldVal, newVal) {
-                    // Showing same value since we are working with array, and all references showing on same array
-                    // Vue doesn't keep copy of premutated array
-                    console.log(newVal);
-                    console.log(oldVal);
-                },
-                deep: true
-            }
-        },
-
-        created () {
-            let url = 'http://localhost:8000/api/tasks';
-            axios.get(url).then(
-                response => { this.tasks = response.data }
-            )
-        },
+        // watch: {
+        //     tasks: {
+        //         handler: function(oldVal, newVal) {
+        //             // Showing same value since we are working with array, and all references showing on same array
+        //             // Vue doesn't keep copy of premutated array
+        //             console.log(newVal);
+        //             console.log(oldVal);
+        //         },
+        //         deep: true
+        //     }
+        // },
+        beforeRouteEnter (to, from, next) {
+            next(vm => {
+                vm.$store.dispatch('loadTasks')
+            })
+        }
     }
 </script>

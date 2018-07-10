@@ -16,17 +16,13 @@
 
 <script>
     import mixin from './../mixins/ListItemMixin.js'
-    // import axios from 'axios'
 
     export default {
         name: 'Task',
-
         mixins: [mixin],
-
         props: {
             task: Object,
         },
-
         data () {
             return {
                 modifiedTaskDescription: '',

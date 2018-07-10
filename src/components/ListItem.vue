@@ -18,7 +18,6 @@
 </template>
 
 <script>
-    import axios from 'axios'
     import mixin from './../mixins/ListItemMixin.js'
 
     export default {
@@ -37,21 +36,12 @@
                 ],
             }
         },
-
         props: {
             task: Object,
         },
-
         methods: {
             modifyTaskPriority(task){
-                axios.put('http://localhost:8000/api/tasks/update', task)
-                .then(() => {
-                    this.modifyingTasks = null;
-                })
-                .catch(error => {
-                    if(error.res.status == 422)
-                    alert(error.res.data.message + '\nTask List Item can\'t be empty')
-                })
+                return this.$store.dispatch('modifyTask', task);
             },
         }
     }

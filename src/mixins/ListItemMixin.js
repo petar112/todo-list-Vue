@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 export default {
     methods: {
         modifyTaskDescription(task){
@@ -7,30 +5,21 @@ export default {
                 let res = confirm("Are you sure u want to update " + task.description + " with " + this.modifiedTaskDescription + " ?");
                 if(res){
                     task.description = this.modifiedTaskDescription;
-                    axios.put('http://localhost:8000/api/tasks/update', task)
-                    .then(() => {
-                        this.modifyingTasks = null;
-                    })
-                    .catch(error => {
-                        if(error.res.status == 422)
-                        alert(error.res.data.message + '\nTask List Item can\'t be empty')
-                    })
+                    this.modifyingTask(task);
+                    return this.$store.dispatch('modifyTask', task);
                 }
             }else {
                 alert('Updating with empty is not allowed')
             }
         },
-
         completeTask(task){
             if(task.completed == false){
                 task.completed = true;
             }else{
                 task.completed = false;
             }
-            axios.put('http://localhost:8000/api/tasks/update', task)
-            .then(() => {})
+            return this.$store.dispatch('modifyTask', task)
         },
-
         modifyingTask(task){
             if (this.modifyingTasks === task.id) {
                 this.modifyingTasks = null
@@ -38,18 +27,15 @@ export default {
                 this.modifyingTasks = task.id
             }
         },
-
         deleteTask () {
             this.$emit('delete-task', this.task)
         },
-        
         setTaskPrivate(task) {
             if(!task.public)
             task.public = true;
             else
             task.public = false;
-
-            axios.put('http://localhost:8000/api/tasks/update', task).then(() => {})
+            return this.$store.dispatch('modifyTask', task)
         }
     }
 }
